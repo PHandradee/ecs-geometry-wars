@@ -17,11 +17,13 @@ class Entity {
     std::string_view getEntityTag() const;
 
     template <typename T>
-    T& addComponent(T& component);
+    T& addComponent();
+
     template <typename T>
     void removeComponent(T& component);
+
     template <typename T>
-    T& getComponent() const;
+    T& getComponent();
 
     ~Entity() { std::println("Entity Destroyed"); };
 
@@ -34,5 +36,19 @@ class Entity {
     Entity() = default;
     friend EntityManager;
 };
+
+template <typename T>
+T& Entity::addComponent() {
+    auto& comp{std::get<T>(m_components)};
+    return comp;
+}
+
+template <typename T>
+void Entity::removeComponent(T& component) {}
+
+template <typename T>
+T& Entity::getComponent() {
+    return std::get<T>(m_components);
+}
 
 #endif  // ENTITY_HPP

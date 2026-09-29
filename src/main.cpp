@@ -7,6 +7,7 @@
 #include <SFML/Window/Event.hpp>
 #include <print>
 
+#include "Component.hpp"
 #include "Entity.hpp"
 #include "EntityManager.hpp"
 
@@ -18,8 +19,9 @@ int main() {
     auto& entityManager{EntityManager::getInstance()};
 
     auto entity{entityManager.createEntity()};
-    std::println("{}", entity->getEntityName());
-
+    auto& transform{entity->getComponent<CTransform>()};
+    std::println("{} has transform of x:{},y{}", entity->getEntityName(),
+                 transform.x, transform.y);
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
