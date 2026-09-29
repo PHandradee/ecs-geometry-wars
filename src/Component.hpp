@@ -23,6 +23,12 @@ class CCollision : public Component {
     int m_collisionRadius{};
 };
 
-using ComponentContainer = std::tuple<CShape, CCollision>;
+class CTransform : public Component {
+   public:
+    int x{};
+    int y{};
+};
+
+using ComponentContainer = std::tuple<CShape, CCollision, CTransform>;
 
 #endif  // COMPONENT_H
