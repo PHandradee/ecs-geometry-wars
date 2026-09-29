@@ -1,13 +1,12 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
+#include <print>
 #include <string>
 #include <string_view>
-#include <tuple>
 
-class Component;
-
-// using ComponentContainer = std::tuple<Component>;
+#include "Component.hpp"
+#include "EntityManager.hpp"
 
 class Entity {
    public:
@@ -18,20 +17,22 @@ class Entity {
     std::string_view getEntityTag() const;
 
     template <typename T>
-    T& addComponent();
+    T& addComponent(T& component);
     template <typename T>
-    void removeComponent();
+    void removeComponent(T& component);
     template <typename T>
     T& getComponent() const;
+
+    ~Entity() { std::println("Entity Destroyed"); };
 
    private:
     int m_entityId{};
     std::string m_entityName{};
     std::string m_entityTag{};
-    // ComponentContainer m_components{};
+    ComponentContainer m_components{};
 
     Entity() = default;
-    ~Entity() = default;
+    friend EntityManager;
 };
 
 #endif  // ENTITY_HPP

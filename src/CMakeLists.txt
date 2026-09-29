@@ -1,5 +1,6 @@
 
-add_executable(${CMAKE_PROJECT_NAME} main.cpp Entity.hpp EntityManager.hpp)
+add_executable(${CMAKE_PROJECT_NAME} main.cpp 
+    Entity.cpp EntityManager.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     sfml-graphics
     sfml-window

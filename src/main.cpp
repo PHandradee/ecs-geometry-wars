@@ -5,7 +5,9 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <print>
 
+#include "Entity.hpp"
 #include "EntityManager.hpp"
 
 int main() {
@@ -14,6 +16,9 @@ int main() {
     ImGui::SFML::Init(window);
 
     auto& entityManager{EntityManager::getInstance()};
+
+    auto entity{entityManager.createEntity()};
+    std::println("{}", entity->getEntityName());
 
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
