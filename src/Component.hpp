@@ -6,7 +6,10 @@
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/Color.hpp"
 
-class Component {};
+class Component {
+   public:
+    bool m_exists{false};
+};
 
 class CShape : public Component {
    public:

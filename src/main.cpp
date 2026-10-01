@@ -18,10 +18,24 @@ int main() {
 
     auto& entityManager{EntityManager::getInstance()};
 
-    auto entity{entityManager.createEntity()};
-    auto& transform{entity->getComponent<CTransform>()};
-    std::println("{} has transform of x:{},y{}", entity->getEntityName(),
-                 transform.x, transform.y);
+    auto entityA{entityManager.createEntity("Entidade A")};
+    entityA->addComponent<CTransform>();
+    if (entityA->hasComponent<CTransform>()) {
+        auto transform{entityA->getComponent<CTransform>()};
+        std::println("{} has transform of x:{},y{}", entityA->getEntityName(),
+                     transform->x, transform->y);
+    }
+    auto entityB{entityManager.createEntity("Entidade B")};
+    std::println("{} has id {}", entityA->getEntityName(),
+                 entityA->getEntityId());
+    std::println("{} has id {}", entityB->getEntityName(),
+                 entityB->getEntityId());
+
+    auto entityC{entityManager.getEntityById(999)};
+    if (entityC == nullptr) {
+        std::println("Entity with id 999 doesnt exits");
+    }
+
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 

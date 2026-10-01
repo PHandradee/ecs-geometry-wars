@@ -20,35 +20,52 @@ class Entity {
     T& addComponent();
 
     template <typename T>
-    void removeComponent(T& component);
+    void removeComponent();
 
     template <typename T>
-    T& getComponent();
+    T* getComponent();
+
+    template <typename T>
+    bool hasComponent();
 
     ~Entity() { std::println("Entity Destroyed"); };
 
    private:
-    int m_entityId{};
+    int m_entityId{0};
     std::string m_entityName{};
     std::string m_entityTag{};
     ComponentContainer m_components{};
 
-    Entity() = default;
+    Entity(const int entityId) : m_entityId(entityId) {};
     friend EntityManager;
 };
 
 template <typename T>
 T& Entity::addComponent() {
     auto& comp{std::get<T>(m_components)};
+    comp.m_exists = true;
     return comp;
 }
 
 template <typename T>
-void Entity::removeComponent(T& component) {}
+void Entity::removeComponent() {
+    auto& comp{std::get<T>(m_components)};
+    comp.m_exists = false;
+}
 
 template <typename T>
-T& Entity::getComponent() {
-    return std::get<T>(m_components);
+T* Entity::getComponent() {
+    auto& comp{std::get<T>(m_components)};
+    if (comp.m_exists == true) {
+        return &comp;
+    }
+    return nullptr;
 }
+
+template <typename T>
+bool Entity::hasComponent() {
+    auto& comp{std::get<T>(m_components)};
+    return comp.m_exists;
+};
 
 #endif  // ENTITY_HPP
