@@ -11,6 +11,8 @@
 class Entity {
    public:
     int getEntityId() const;
+
+    void setEntityName(std::string_view name);
     std::string_view getEntityName() const;
 
     void setEntityTag(std::string tag);
@@ -28,7 +30,7 @@ class Entity {
     template <typename T>
     bool hasComponent();
 
-    ~Entity() { std::println("Entity Destroyed"); };
+    ~Entity() { std::println("Entity {} Destroyed", m_entityName); };
 
    private:
     int m_entityId{0};

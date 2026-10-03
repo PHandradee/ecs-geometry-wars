@@ -26,10 +26,13 @@ int main() {
                      transform->x, transform->y);
     }
     auto entityB{entityManager.createEntity("Entidade B")};
+    auto entityD{entityManager.createEntity("Entidade B")};
     std::println("{} has id {}", entityA->getEntityName(),
                  entityA->getEntityId());
     std::println("{} has id {}", entityB->getEntityName(),
                  entityB->getEntityId());
+    std::println("{} has id {}", entityD->getEntityName(),
+                 entityD->getEntityId());
 
     auto entityC{entityManager.getEntityById(999)};
     if (entityC == nullptr) {
