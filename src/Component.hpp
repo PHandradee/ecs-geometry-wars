@@ -13,12 +13,12 @@ class Component {
 
 class CShape : public Component {
    public:
-    sf::CircleShape m_sfShape{};
     int m_shapeRadius{};
     int m_shapeVertices{};
     sf::Color m_fillColor{};
     sf::Color m_outlineColor{};
     sf::Color m_outLineTickness{};
+    sf::CircleShape m_sfShape{};
 };
 
 class CCollision : public Component {
@@ -32,6 +32,31 @@ class CTransform : public Component {
     int y{};
 };
 
-using ComponentContainer = std::tuple<CShape, CCollision, CTransform>;
+class CMovement : public Component {
+   public:
+    float m_minSpeed{};
+    float m_maxSpeed{};
+};
+
+class CPlayerInput : public Component {
+   public:
+    bool m_top{};
+    bool m_left{};
+    bool m_down{};
+    bool m_right{};
+};
+
+class CLifeSpan : public Component {
+   public:
+    int m_lifeSpan{};
+};
+
+class CSpawn : public Component {
+   public:
+    int m_spawnInterval{};
+};
+
+using ComponentContainer = std::tuple<CShape, CCollision, CTransform, CMovement,
+                                      CPlayerInput, CLifeSpan, CSpawn>;
 
 #endif  // COMPONENT_H
