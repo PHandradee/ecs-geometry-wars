@@ -1,26 +1,46 @@
 #include "Game.hpp"
 
+#include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <print>
 #include <sstream>
 #include <string>
 
+#include "SFML/Window/VideoMode.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
 
-Game::Game() : m_window(sf::VideoMode({640, 480}), "ImGui + SFML = <3") {
-    m_window.setFramerateLimit(60);
-    auto a{ImGui::SFML::Init(m_window)};
-};
 Game::~Game() { ImGui::SFML::Shutdown(); };
 
 void Game::run() {
     parseConfigFile();
+    std::println("Arquivo completo:\n{}", m_parsedConfigFile);
+    createWindow();
     while (m_window.isOpen()) {
         processInput();
         update();
         render();
     }
+};
+
+void Game::createWindow() {
+    auto windowData{std::ranges::find_if(
+        m_parsedConfigFile, [](auto& e) { return e[0] == "Window"; })};
+    if (windowData == m_parsedConfigFile.end()) {
+        std::cerr << "Window not found on configuration file";
+        return;
+    }
+    const sf::VideoMode videoMode{
+        {static_cast<uint>(std::stoi((*windowData)[1])),
+         static_cast<uint>(std::stoi((*windowData)[2]))}};
+    const int limitFps{std::stoi((*windowData)[3])};
+    const auto screenState{std::stoi((*windowData)[4]) == 1
+                               ? sf::State::Fullscreen
+                               : sf::State::Windowed};
+    m_window = sf::RenderWindow{videoMode, "Test", screenState};
+    m_window.setFramerateLimit(limitFps);
+    auto a{ImGui::SFML::Init(m_window)};
 };
 
 void Game::processInput() {
@@ -54,9 +74,7 @@ void Game::parseConfigFile() {
         return;
     }
 
-    std::vector<std::vector<std::string>> tokenizedLines{tokenizeFile(file)};
-
-    std::println("{}", tokenizedLines);
+    m_parsedConfigFile = tokenizeFile(file);
 }
 
 std::string Game::parseLine(std::ifstream& file) {

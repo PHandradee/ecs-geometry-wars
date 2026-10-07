@@ -6,7 +6,7 @@
 
 class Game {
    public:
-    Game();
+    Game() = default;
     ~Game();
 
     void run();
@@ -22,9 +22,12 @@ class Game {
         std::ifstream& file, const char tokenDelimiter = ' ');
     std::string parseLine(std::ifstream& file);
 
+    void createWindow();
+
     sf::RenderWindow m_window{};
     EntityManager m_entityManager{EntityManager::getInstance()};
     sf::Clock m_deltaClock{};
+    std::vector<std::vector<std::string>> m_parsedConfigFile{};
 };
 
 #endif  // GAME_HPP
