@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "EntityManager.hpp"
+#include "SFML/Graphics/Font.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
 class Game {
@@ -23,8 +24,10 @@ class Game {
     std::string parseLine(std::ifstream& file);
 
     void createWindow();
+    void createFont();
 
     sf::RenderWindow m_window{};
+    sf::Font m_font{};
     EntityManager m_entityManager{EntityManager::getInstance()};
     sf::Clock m_deltaClock{};
     std::vector<std::vector<std::string>> m_parsedConfigFile{};

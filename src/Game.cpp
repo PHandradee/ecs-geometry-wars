@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include "SFML/Window/VideoMode.hpp"
+#include "Specifications.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
 
@@ -17,6 +17,7 @@ void Game::run() {
     parseConfigFile();
     std::println("Arquivo completo:\n{}", m_parsedConfigFile);
     createWindow();
+    createFont();
     while (m_window.isOpen()) {
         processInput();
         update();
@@ -31,16 +32,23 @@ void Game::createWindow() {
         std::cerr << "Window not found on configuration file";
         return;
     }
-    const sf::VideoMode videoMode{
-        {static_cast<uint>(std::stoi((*windowData)[1])),
-         static_cast<uint>(std::stoi((*windowData)[2]))}};
-    const int limitFps{std::stoi((*windowData)[3])};
-    const auto screenState{std::stoi((*windowData)[4]) == 1
-                               ? sf::State::Fullscreen
-                               : sf::State::Windowed};
-    m_window = sf::RenderWindow{videoMode, "Test", screenState};
-    m_window.setFramerateLimit(limitFps);
+
+    const WindowSpec wSpec{*windowData};
+    m_window =
+        sf::RenderWindow{wSpec.toVideoMode(), "Test", wSpec.m_fullScreen};
+    m_window.setFramerateLimit(wSpec.m_frameLimit);
     auto a{ImGui::SFML::Init(m_window)};
+};
+
+void Game::createFont() {
+    auto fontData{std::ranges::find_if(m_parsedConfigFile,
+                                       [](auto& e) { return e[0] == "Font"; })};
+    if (fontData == m_parsedConfigFile.end()) {
+        std::cerr << "Window not found on configuration file";
+        return;
+    }
+    const FontSpec fSpec{*fontData};
+    m_font = fSpec.toSfFont();
 };
 
 void Game::processInput() {
