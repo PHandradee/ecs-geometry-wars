@@ -1,8 +1,8 @@
 #include "Entity.hpp"
 
-int Entity::getEntityId() const { return m_entityId; };
+auto Entity::getEntityId() const -> int { return m_entityId; };
 
-void Entity::setEntityName(std::string_view name) {
+auto Entity::setEntityName(std::string_view name) -> void {
     const auto& eManager{EntityManager::getInstance()};
     const auto e{eManager.getEntityByName(name)};
     std::string newName{name};
@@ -13,8 +13,8 @@ void Entity::setEntityName(std::string_view name) {
     return;
 };
 
-std::string_view Entity::getEntityName() const { return m_entityName; }
+auto Entity::getEntityName() const -> std::string_view { return m_entityName; }
 
-void Entity::setEntityTag(std::string tag) { m_entityTag = tag; }
+auto Entity::setEntityTag(std::string tag) -> void { m_entityTag = tag; }
 
-std::string_view Entity::getEntityTag() const { return m_entityTag; }
+auto Entity::getEntityTag() const -> std::string_view { return m_entityTag; }

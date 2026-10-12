@@ -7,20 +7,22 @@
 
 #include "Entity.hpp"
 
-std::shared_ptr<Entity> EntityManager::createEntity() {
+auto EntityManager::createEntity() -> std::shared_ptr<Entity> {
     ++m_entitiesCount;
     std::shared_ptr<Entity> entity{new Entity{m_entitiesCount}};
     m_entities.push_back(entity);
     return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::createEntity(std::string_view name) {
+auto EntityManager::createEntity(std::string_view name)
+    -> std::shared_ptr<Entity> {
     std::shared_ptr<Entity> entity{createEntity()};
     entity->setEntityName(name);
     return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::getEntityById(const int entityId) const {
+auto EntityManager::getEntityById(const int entityId) const
+    -> std::shared_ptr<Entity> {
     auto entity{std::ranges::find_if(m_entities, [entityId](const auto& e) {
         return e->getEntityId() == entityId;
     })};
@@ -30,8 +32,8 @@ std::shared_ptr<Entity> EntityManager::getEntityById(const int entityId) const {
     return *entity;
 };
 
-std::shared_ptr<Entity> EntityManager::getEntityByName(
-    std::string_view entityName) const {
+auto EntityManager::getEntityByName(std::string_view entityName) const
+    -> std::shared_ptr<Entity> {
     auto entity{std::ranges::find_if(m_entities, [entityName](const auto& e) {
         return e->getEntityName() == entityName;
     })};
@@ -41,8 +43,8 @@ std::shared_ptr<Entity> EntityManager::getEntityByName(
     return *entity;
 };
 
-std::vector<std::shared_ptr<Entity>> EntityManager::getAllEntitiesWithTag(
-    std::string_view tag) const {
+auto EntityManager::getAllEntitiesWithTag(std::string_view tag) const
+    -> std::vector<std::shared_ptr<Entity>> {
     auto filtered = m_entities | std::views::filter([tag](const auto& e) {
                         return e->getEntityTag() == tag;
                     });

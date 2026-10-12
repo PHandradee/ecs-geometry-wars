@@ -8,13 +8,14 @@ class Entity;
 
 class EntityManager {
    public:
-    std::shared_ptr<Entity> createEntity();
-    std::shared_ptr<Entity> createEntity(std::string_view name);
+    auto createEntity() -> std::shared_ptr<Entity>;
+    auto createEntity(std::string_view name) -> std::shared_ptr<Entity>;
 
-    std::shared_ptr<Entity> getEntityById(const int entityId) const;
-    std::shared_ptr<Entity> getEntityByName(std::string_view entityName) const;
-    std::vector<std::shared_ptr<Entity>> getAllEntitiesWithTag(
-        std::string_view tag) const;
+    auto getEntityById(const int entityId) const -> std::shared_ptr<Entity>;
+    auto getEntityByName(std::string_view entityName) const
+        -> std::shared_ptr<Entity>;
+    auto getAllEntitiesWithTag(std::string_view tag) const
+        -> std::vector<std::shared_ptr<Entity>>;
 
     static EntityManager& getInstance() {
         static EntityManager instance{};

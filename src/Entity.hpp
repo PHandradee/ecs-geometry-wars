@@ -10,25 +10,25 @@
 
 class Entity {
    public:
-    int getEntityId() const;
+    auto getEntityId() const -> int;
 
-    void setEntityName(std::string_view name);
-    std::string_view getEntityName() const;
+    auto setEntityName(std::string_view name) -> void;
+    auto getEntityName() const -> std::string_view;
 
-    void setEntityTag(std::string tag);
-    std::string_view getEntityTag() const;
-
-    template <typename T>
-    T& addComponent();
+    auto setEntityTag(std::string tag) -> void;
+    auto getEntityTag() const -> std::string_view;
 
     template <typename T>
-    void removeComponent();
+    auto addComponent() -> T&;
 
     template <typename T>
-    T* getComponent();
+    auto removeComponent() -> void;
 
     template <typename T>
-    bool hasComponent();
+    auto getComponent() -> T*;
+
+    template <typename T>
+    auto hasComponent() -> bool;
 
     ~Entity() { std::println("Entity {} Destroyed", m_entityName); };
 
@@ -43,20 +43,20 @@ class Entity {
 };
 
 template <typename T>
-T& Entity::addComponent() {
+auto Entity::addComponent() -> T& {
     auto& comp{std::get<T>(m_components)};
     comp.m_exists = true;
     return comp;
 }
 
 template <typename T>
-void Entity::removeComponent() {
+auto Entity::removeComponent() -> void {
     auto& comp{std::get<T>(m_components)};
     comp.m_exists = false;
 }
 
 template <typename T>
-T* Entity::getComponent() {
+auto Entity::getComponent() -> T* {
     auto& comp{std::get<T>(m_components)};
     if (comp.m_exists == true) {
         return &comp;
@@ -65,7 +65,7 @@ T* Entity::getComponent() {
 }
 
 template <typename T>
-bool Entity::hasComponent() {
+auto Entity::hasComponent() -> bool {
     auto& comp{std::get<T>(m_components)};
     return comp.m_exists;
 };
