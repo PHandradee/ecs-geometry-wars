@@ -50,8 +50,7 @@ class FontSpec {
     std::string fontFile{};
 };
 
-class PlayerSpec {
-   public:
+struct PlayerSpec {
     PlayerSpec(const std::span<std::string> tokenizedPLine)
         : m_shapeRadius{std::stoi(tokenizedPLine[1])},
           m_colRadius{std::stoi(tokenizedPLine[2])},
@@ -65,7 +64,6 @@ class PlayerSpec {
           m_outlineThickness{std::stoi(tokenizedPLine[10])},
           m_shapeVertices{std::stoi(tokenizedPLine[11])} {}
 
-   private:
     int m_shapeRadius{};
     int m_colRadius{};
     float m_speed{};

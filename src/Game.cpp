@@ -1,12 +1,15 @@
 #include "Game.hpp"
 
 #include <algorithm>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <print>
 #include <sstream>
 #include <string>
 
+#include "Component.hpp"
+#include "Entity.hpp"
 #include "Specifications.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
@@ -18,6 +21,7 @@ auto Game::run() -> void {
     std::println("Arquivo completo:\n{}", m_parsedConfigFile);
     createWindow();
     createFont();
+    createPlayer();
     while (m_window.isOpen()) {
         processInput();
         update();
@@ -44,11 +48,44 @@ auto Game::createFont() -> void {
     auto fontData{std::ranges::find_if(m_parsedConfigFile,
                                        [](auto& e) { return e[0] == "Font"; })};
     if (fontData == m_parsedConfigFile.end()) {
-        std::cerr << "Window not found on configuration file";
+        std::cerr << "Font not found on configuration file";
         return;
     }
     const FontSpec fSpec{*fontData};
     m_font = fSpec.toSfFont();
+};
+
+auto Game::createPlayer() -> void {
+    auto playerData{std::ranges::find_if(
+        m_parsedConfigFile, [](auto& e) { return e[0] == "Player"; })};
+    if (playerData == m_parsedConfigFile.end()) {
+        std::cerr << "Player not found on configuration file";
+        return;
+    }
+    const PlayerSpec pSpec{*playerData};
+    auto playerEntity{EntityManager::getInstance().createEntity("Player")};
+    playerEntity->setEntityTag("Player");
+    auto& playerShape{playerEntity->addComponent<CShape>()};
+    playerShape.m_shapeRadius = pSpec.m_shapeRadius;
+    playerShape.m_shapeVertices = pSpec.m_shapeVertices;
+    playerShape.m_fillColor = pSpec.m_fillColor;
+    playerShape.m_outlineColor = pSpec.m_outlineColor;
+    playerShape.m_outlineThickness = pSpec.m_outlineThickness;
+    playerShape.m_sfShape =
+        sf::CircleShape{static_cast<float>(pSpec.m_shapeRadius),
+                        static_cast<size_t>(pSpec.m_shapeVertices)};
+    playerShape.m_sfShape.setFillColor(pSpec.m_fillColor);
+    playerShape.m_sfShape.setOutlineColor(pSpec.m_outlineColor);
+    playerShape.m_sfShape.setOutlineThickness(
+        static_cast<float>(pSpec.m_outlineThickness));
+    // playerShape.m_sfShape.setPosition()
+    auto& playerCollision{playerEntity->addComponent<CCollision>()};
+    playerCollision.m_collisionRadius = pSpec.m_colRadius;
+    auto& playerMovement{playerEntity->addComponent<CMovement>()};
+    playerMovement.m_minSpeed = pSpec.m_speed;
+    playerMovement.m_maxSpeed = pSpec.m_speed;
+    playerEntity->addComponent<CTransform>();
+    playerEntity->addComponent<CPlayerInput>();
 };
 
 auto Game::processInput() -> void {
@@ -72,6 +109,11 @@ auto Game::update() -> void {
 auto Game::render() -> void {
     m_window.clear();
     // m_window.draw(shape);
+    auto playerEntities{
+        EntityManager::getInstance().getAllEntitiesWithTag("Player")};
+    for (auto entity : playerEntities) {
+        m_window.draw(entity->getComponent<CShape>()->m_sfShape);
+    }
     ImGui::SFML::Render(m_window);
     m_window.display();
 };

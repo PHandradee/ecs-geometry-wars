@@ -17,12 +17,15 @@ class Game {
     auto update() -> void;
     auto render() -> void;
     auto parseConfigFile() -> void;
-    auto tokenize(std::string_view line, const char delimiter = ' ') -> std::vector<std::string>;
-    auto tokenizeFile(std::ifstream& file, const char tokenDelimiter = ' ') -> std::vector<std::vector<std::string>>;
+    auto tokenize(std::string_view line, const char delimiter = ' ')
+        -> std::vector<std::string>;
+    auto tokenizeFile(std::ifstream& file, const char tokenDelimiter = ' ')
+        -> std::vector<std::vector<std::string>>;
     auto parseLine(std::ifstream& file) -> std::string;
 
     auto createWindow() -> void;
     auto createFont() -> void;
+    auto createPlayer() -> void;
 
     sf::RenderWindow m_window{};
     sf::Font m_font{};

@@ -17,7 +17,7 @@ class CShape : public Component {
     int m_shapeVertices{};
     sf::Color m_fillColor{};
     sf::Color m_outlineColor{};
-    sf::Color m_outLineTickness{};
+    int m_outlineThickness{};
     sf::CircleShape m_sfShape{};
 };
 
