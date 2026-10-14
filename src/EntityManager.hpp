@@ -16,6 +16,7 @@ class EntityManager {
         -> std::shared_ptr<Entity>;
     auto getAllEntitiesWithTag(std::string_view tag) const
         -> std::vector<std::shared_ptr<Entity>>;
+    auto getAllEntities() const -> std::vector<std::shared_ptr<Entity>>;
 
     static EntityManager& getInstance() {
         static EntityManager instance{};

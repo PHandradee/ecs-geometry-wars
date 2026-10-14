@@ -10,6 +10,7 @@
 
 #include "Component.hpp"
 #include "Entity.hpp"
+#include "SFML/System/Angle.hpp"
 #include "Specifications.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
@@ -74,11 +75,15 @@ auto Game::createPlayer() -> void {
     playerShape.m_sfShape =
         sf::CircleShape{static_cast<float>(pSpec.m_shapeRadius),
                         static_cast<size_t>(pSpec.m_shapeVertices)};
+    playerShape.m_sfShape.setOrigin({static_cast<float>(pSpec.m_shapeRadius),
+                                     static_cast<float>(pSpec.m_shapeRadius)});
     playerShape.m_sfShape.setFillColor(pSpec.m_fillColor);
     playerShape.m_sfShape.setOutlineColor(pSpec.m_outlineColor);
     playerShape.m_sfShape.setOutlineThickness(
         static_cast<float>(pSpec.m_outlineThickness));
-    // playerShape.m_sfShape.setPosition()
+    playerShape.m_sfShape.setPosition(
+        {m_window.getSize().x / 2.0f, m_window.getSize().y / 2.0f});
+
     auto& playerCollision{playerEntity->addComponent<CCollision>()};
     playerCollision.m_collisionRadius = pSpec.m_colRadius;
     auto& playerMovement{playerEntity->addComponent<CMovement>()};
@@ -98,6 +103,15 @@ auto Game::processInput() -> void {
     }
 };
 auto Game::update() -> void {
+    const auto entities{EntityManager::getInstance().getAllEntities()};
+    std::ranges::for_each(entities, [this](std::shared_ptr<Entity> entity) {
+        if (entity->hasComponent<CShape>()) {
+            auto& shape{entity->getComponent<CShape>()->m_sfShape};
+            auto angle{sf::degrees(1.f)};
+            shape.rotate(angle);
+        }
+    });
+
     ImGui::SFML::Update(m_window, m_deltaClock.restart());
 
     // ImGui::ShowDemom_window();
@@ -111,9 +125,12 @@ auto Game::render() -> void {
     // m_window.draw(shape);
     auto playerEntities{
         EntityManager::getInstance().getAllEntitiesWithTag("Player")};
-    for (auto entity : playerEntities) {
-        m_window.draw(entity->getComponent<CShape>()->m_sfShape);
-    }
+    std::ranges::for_each(
+        playerEntities, [this](std::shared_ptr<Entity> entity) {
+            if (entity->hasComponent<CShape>()) {
+                m_window.draw(entity->getComponent<CShape>()->m_sfShape);
+            }
+        });
     ImGui::SFML::Render(m_window);
     m_window.display();
 };

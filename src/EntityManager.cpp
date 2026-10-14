@@ -51,3 +51,8 @@ auto EntityManager::getAllEntitiesWithTag(std::string_view tag) const
     return std::vector<std::shared_ptr<Entity>>(filtered.begin(),
                                                 filtered.end());
 }
+
+auto EntityManager::getAllEntities() const
+    -> std::vector<std::shared_ptr<Entity>> {
+    return m_entities;
+}
