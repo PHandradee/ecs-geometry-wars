@@ -10,7 +10,10 @@
 
 #include "Component.hpp"
 #include "Entity.hpp"
+#include "EntityManager.hpp"
 #include "SFML/System/Angle.hpp"
+#include "SFML/Window/Event.hpp"
+#include "SFML/Window/Keyboard.hpp"
 #include "Specifications.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
@@ -96,6 +99,151 @@ auto Game::createPlayer() -> void {
 auto Game::processInput() -> void {
     while (const auto event = m_window.pollEvent()) {
         ImGui::SFML::ProcessEvent(m_window, *event);
+
+        if (auto& e{event.value()};
+            e.is<sf::Event::KeyPressed>() && event.has_value()) {
+            auto& keyPressedEvent{*e.getIf<sf::Event::KeyPressed>()};
+            switch (keyPressedEvent.code) {
+                case sf::Keyboard::Key::Escape: {
+                    std::print("Escape key pressed, closing window\n");
+                    m_window.close();
+
+                    break;
+                }
+                case sf::Keyboard::Key::W:
+                case sf::Keyboard::Key::Up: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_top =
+                                    true;
+                                std::print("PlayerInput m_top set to true\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::A:
+                case sf::Keyboard::Key::Left: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_left =
+                                    true;
+                                std::print("PlayerInput m_left set to true\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::S:
+                case sf::Keyboard::Key::Down: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_down =
+                                    true;
+                                std::print("PlayerInput m_down set to true\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::D:
+                case sf::Keyboard::Key::Right: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_right =
+                                    true;
+                                std::print("PlayerInput m_right set to true\n");
+                            }
+                        });
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        if (auto& e{event.value()};
+            e.is<sf::Event::KeyReleased>() && event.has_value()) {
+            auto& keyReleasedEvent{*e.getIf<sf::Event::KeyReleased>()};
+            switch (keyReleasedEvent.code) {
+                case sf::Keyboard::Key::W:
+                case sf::Keyboard::Key::Up: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_top =
+                                    false;
+                                std::print("PlayerInput m_top set to false\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::A:
+                case sf::Keyboard::Key::Left: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_left =
+                                    false;
+                                std::print("PlayerInput m_left set to false\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::S:
+                case sf::Keyboard::Key::Down: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_down =
+                                    false;
+                                std::print("PlayerInput m_down set to false\n");
+                            }
+                        });
+                    break;
+                }
+                case sf::Keyboard::Key::D:
+                case sf::Keyboard::Key::Right: {
+                    auto playerEntity{
+                        EntityManager::getInstance().getAllEntitiesWithTag(
+                            "Player")};
+                    std::ranges::for_each(
+                        playerEntity, [](std::shared_ptr<Entity> entity) {
+                            if (entity->hasComponent<CPlayerInput>()) {
+                                entity->getComponent<CPlayerInput>()->m_right =
+                                    false;
+                                std::print(
+                                    "PlayerInput m_right set to false\n");
+                            }
+                        });
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
 
         if (event->is<sf::Event::Closed>()) {
             m_window.close();
